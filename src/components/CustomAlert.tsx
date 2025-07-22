@@ -1,6 +1,6 @@
 "use client";
 
-import { useAlert } from "../../utils/useAlert";
+import { useAlert } from "@/utils/useAlert";
 
 export function CustomAlert() {
 	const { message, type } = useAlert();

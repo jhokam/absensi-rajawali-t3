@@ -8,7 +8,7 @@ import type {
 export function formatResponse<T>(
 	success: boolean,
 	message: string,
-	data: { items: T; meta: Pagination } | null,
+	data: T | null,
 	error: ErrorResponse | null,
 ): ResponseBase<T> {
 	return {

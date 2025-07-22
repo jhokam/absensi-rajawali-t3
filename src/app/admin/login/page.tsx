@@ -1,14 +1,13 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { api } from "../../trpc/react";
-import { loginSchema } from "../../types/auth";
-import { useAlert } from "../../utils/useAlert";
-import TextError from "../_components/TextError";
-import Button from "../_components/ui/Button";
-import Input from "../_components/ui/Input";
+import { api } from "@/trpc/react";
+import { loginSchema } from "@/types/auth";
+import { useAlert } from "@/utils/useAlert";
+import TextError from "@/components/TextError";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 export default function LoginPage() {
 	const navigate = useRouter();

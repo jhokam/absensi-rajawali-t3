@@ -31,10 +31,7 @@ export const loginRouter = createTRPCRouter({
 		return formatResponse(
 			true,
 			"Login berhasil",
-			{
-				items: { access_token: "token" },
-				meta: { limit: 1, page: 1, total: 1, totalPages: 1 },
-			},
+			{ access_token: "token" },
 			null,
 		);
 	}),

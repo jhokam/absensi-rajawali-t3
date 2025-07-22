@@ -6,7 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -95,6 +95,24 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 
 	return result;
 });
+
+export const protectedProcedure = t.procedure.use(
+	async function isAuthed(opts) {
+		const { ctx } = opts;
+
+		if (!ctx.headers.get("authorization")) {
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "Unauthorized",
+			});
+		}
+		return opts.next({
+			ctx: {
+				user: ctx.headers.get("authorization"),
+			},
+		});
+	},
+);
 
 /**
  * Public (unauthenticated) procedure

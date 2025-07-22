@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { AlertProvider } from "../utils/useAlert";
-import { CustomAlert } from "./_components/CustomAlert";
+import { CustomAlert } from "@/components/CustomAlert";
 
 export const metadata: Metadata = {
 	title: "Absensi Rajawali",
