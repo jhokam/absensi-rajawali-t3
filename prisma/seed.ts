@@ -1,6 +1,6 @@
-import { hash } from "argon2";
-import "dotenv/config";
+// import "dotenv/config";
 import { fakerID_ID } from "@faker-js/faker";
+import { hash } from "argon2";
 import { db } from "../src/server/db";
 
 async function main() {
@@ -20,7 +20,7 @@ async function main() {
 		},
 	});
 
-	await prisma.desa.createMany({
+	await db.desa.createMany({
 		data: [
 			{
 				id: 2,
@@ -37,7 +37,7 @@ async function main() {
 		],
 	});
 
-	const kelompok = await prisma.kelompok.create({
+	const kelompok = await db.kelompok.create({
 		data: {
 			id: "SML",
 			nama: "Sendang Mulyo",
@@ -45,7 +45,7 @@ async function main() {
 		},
 	});
 
-	await prisma.kelompok.createMany({
+	await db.kelompok.createMany({
 		data: [
 			{
 				id: "SRT",
@@ -140,7 +140,7 @@ async function main() {
 		],
 	});
 
-	const generus = await prisma.generus.create({
+	const generus = await db.generus.create({
 		data: {
 			nama: fakerID_ID.person.fullName(),
 			jenis_kelamin: "Laki_Laki",
@@ -159,7 +159,7 @@ async function main() {
 		},
 	});
 
-	const user = await prisma.user.create({
+	const user = await db.user.create({
 		data: {
 			username: "admin",
 			password: await hash(process.env.USER_PASSWORD || "default_password"),
@@ -167,7 +167,7 @@ async function main() {
 		},
 	});
 
-	const event = await prisma.event.create({
+	const event = await db.event.create({
 		data: {
 			title: "muda-mudi November 2006",
 			description: "muda-mudi November 2006",
@@ -178,7 +178,7 @@ async function main() {
 		},
 	});
 
-	await prisma.presence.create({
+	await db.presence.create({
 		data: {
 			status: "Hadir",
 			event_id: event.id,
@@ -186,7 +186,7 @@ async function main() {
 		},
 	});
 
-	await prisma.log.create({
+	await db.log.create({
 		data: {
 			description: "Berhasil login",
 			event: "Login",
@@ -202,5 +202,5 @@ main()
 		process.exit(1);
 	})
 	.finally(async () => {
-		await prisma.$disconnect();
+		await db.$disconnect();
 	});
