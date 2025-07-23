@@ -8,7 +8,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import Skeleton from "@/components/Skeleton";
 import Button from "@/components/ui/Button";

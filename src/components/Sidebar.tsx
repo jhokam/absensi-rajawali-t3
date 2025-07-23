@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Dialog from "@/components/Dialog";
 import Button from "@/components/ui/Button";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
 	const [logoutDialog, setLogoutDialog] = useState(false);
@@ -26,57 +26,65 @@ export default function Sidebar() {
 				<li key="Dashboard">
 					<Link
 						href="/admin/dashboard"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Dashboard
 					</Link>
 				</li>
 				<li key="Desa">
 					<Link
 						href="/admin/desa"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Desa
 					</Link>
 				</li>
 				<li key="Kelompok">
 					<Link
 						href="/admin/kelompok"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Kelompok
 					</Link>
 				</li>
 				<li key="Generus">
 					<Link
 						href="/admin/generus"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Generus
 					</Link>
 				</li>
 				<li key="Kegiatan">
 					<Link
 						href="/admin/kegiatan"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Kegiatan
 					</Link>
 				</li>
 				<li key="Presensi">
 					<Link
 						href="/admin/presensi"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Presensi
 					</Link>
 				</li>
 				<li key="Log">
 					<Link
 						href="/admin/log"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
 						Log
 					</Link>
 				</li>
 				<li key="User">
 					<Link
-						href="/admin/user"
-						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800">
-						User
+						href="/admin/pengguna"
+						className="block py-2 px-4 rounded-md hover:bg-gray-100 text-gray-800"
+					>
+						Pengguna
 					</Link>
 				</li>
 			</ul>
@@ -84,7 +92,8 @@ export default function Sidebar() {
 				<Button
 					type="button"
 					onClick={() => setLogoutDialog(true)}
-					className="w-full">
+					className="w-full"
+				>
 					Logout
 				</Button>
 			</div>
