@@ -1,9 +1,10 @@
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import TextError from "@/components/TextError";
 import ThemedInput from "@/components/ui/Input";
 import { roleOptions } from "@/constants";
-import { defaultValueUser, type UserRequest, userSchema } from "@/types/user";
+import type { UserCreateInput } from "@/generated/client/models";
+import { defaultValueUser, userCreateSchema } from "@/types/user";
 import { useAlert } from "@/utils/useAlert";
 import Button from "../../ui/Button";
 import ThemedSelect from "../../ui/Select";
@@ -16,8 +17,7 @@ export default function SheetCreateUser({
 	const { setAlert } = useAlert();
 	const queryClient = useQueryClient();
 
-	const { mutate } = useMutation({
-		mutationFn: async (data: UserRequest) => {},
+	const { mutate } = api.user.createUser.useMutation({
 		onError: (error) => {
 			setAlert(error.message, "error");
 		},
@@ -26,7 +26,7 @@ export default function SheetCreateUser({
 	const form = useForm({
 		defaultValues: defaultValueUser,
 		onSubmit: ({ value }) => {
-			mutate(value as UserRequest, {
+			mutate(value, {
 				onSuccess: (data) => {
 					queryClient.invalidateQueries({ queryKey: ["userData"] });
 					setAlert(data.data.message, "success");
@@ -35,7 +35,7 @@ export default function SheetCreateUser({
 			closeSheet();
 		},
 		validators: {
-			onSubmit: userSchema,
+			onSubmit: userCreateSchema,
 		},
 	});
 

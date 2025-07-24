@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import TextError from "@/components/TextError";
 import ThemedInput from "@/components/ui/Input";
 import type { EventCreateInput } from "@/generated/client/models";
@@ -14,8 +14,7 @@ export default function SheetCreateEvent({
 	const { setAlert } = useAlert();
 	const queryClient = useQueryClient();
 
-	const { mutate } = useMutation({
-		mutationFn: (data: EventCreateInput) => {},
+	const { mutate } = api.event.createEvent.useMutation({
 		onError: (error) => {
 			setAlert(error.message, "error");
 		},

@@ -1,6 +1,11 @@
 import type { UserWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { userFilter } from "@/types/user";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	userCreateSchema,
+	userDeleteSchema,
+	userFilter,
+	userUpdateSchema,
+} from "@/types/user";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
@@ -61,5 +66,48 @@ export const userRouter = createTRPCRouter({
 				{ items: data, meta: { total, page, limit, totalPages } },
 				null,
 			);
+		}),
+
+	createUser: publicProcedure
+		.input(userCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const user = await ctx.db.user.create({
+				data: {
+					username: input.username,
+					password: input.password,
+					role: input.role,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menambahkan data User", user, null);
+		}),
+
+	updateUser: publicProcedure
+		.input(userUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const user = await ctx.db.user.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					username: input.username,
+					password: input.password,
+					role: input.role,
+				},
+			});
+
+			return formatResponse(true, "Berhasil mengubah data User", user, null);
+		}),
+
+	deleteUser: publicProcedure
+		.input(userDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const user = await ctx.db.user.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menghapus data User", user, null);
 		}),
 });

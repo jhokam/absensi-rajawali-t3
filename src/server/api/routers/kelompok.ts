@@ -1,6 +1,11 @@
 import type { KelompokWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { kelompokFilter } from "@/types/kelompok";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	kelompokCreateSchema,
+	kelompokDeleteSchema,
+	kelompokFilter,
+	kelompokUpdateSchema,
+} from "@/types/kelompok";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const kelompokRouter = createTRPCRouter({
@@ -59,6 +64,63 @@ export const kelompokRouter = createTRPCRouter({
 				true,
 				"Berhasil mendapatkan data Kelompok",
 				{ items: data, meta: { total, page, limit, totalPages } },
+				null,
+			);
+		}),
+
+	createKelompok: publicProcedure
+		.input(kelompokCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const kelompok = await ctx.db.kelompok.create({
+				data: {
+					id: input.id,
+					nama: input.nama,
+					desa_id: input.desa_id,
+				},
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil menambahkan data Kelompok",
+				kelompok,
+				null,
+			);
+		}),
+
+	updateKelompok: publicProcedure
+		.input(kelompokUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const kelompok = await ctx.db.kelompok.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					nama: input.nama,
+					desa_id: input.desa_id,
+				},
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil mengubah data Kelompok",
+				kelompok,
+				null,
+			);
+		}),
+
+	deleteKelompok: publicProcedure
+		.input(kelompokDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const kelompok = await ctx.db.kelompok.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil menghapus data Kelompok",
+				kelompok,
 				null,
 			);
 		}),

@@ -1,6 +1,11 @@
 import type { GenerusWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { generusFilter } from "../../../types/generus";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	generusCreateSchema,
+	generusDeleteSchema,
+	generusFilter,
+	generusUpdateSchema,
+} from "@/types/generus";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const generusRouter = createTRPCRouter({
@@ -79,6 +84,56 @@ export const generusRouter = createTRPCRouter({
 				true,
 				"Berhasil mendapatkan data Generus",
 				{ items: data, meta: { total, page, limit, totalPages } },
+				null,
+			);
+		}),
+
+	createGenerus: publicProcedure
+		.input(generusCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const generus = await ctx.db.generus.create({
+				data: input,
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil menambahkan data Generus",
+				generus,
+				null,
+			);
+		}),
+
+	updateGenerus: publicProcedure
+		.input(generusUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const generus = await ctx.db.generus.update({
+				where: {
+					id: input.id,
+				},
+				data: input,
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil mengubah data Generus",
+				generus,
+				null,
+			);
+		}),
+
+	deleteGenerus: publicProcedure
+		.input(generusDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const generus = await ctx.db.generus.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil menghapus data Generus",
+				generus,
 				null,
 			);
 		}),

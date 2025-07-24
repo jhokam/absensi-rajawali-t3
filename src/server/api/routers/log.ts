@@ -1,6 +1,11 @@
 import type { LogWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { logFilter } from "../../../types/log";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	logCreateSchema,
+	logDeleteSchema,
+	logFilter,
+	logUpdateSchema,
+} from "@/types/log";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const logRouter = createTRPCRouter({
@@ -62,5 +67,48 @@ export const logRouter = createTRPCRouter({
 				{ items: data, meta: { total, page, limit, totalPages } },
 				null,
 			);
+		}),
+
+	createLog: publicProcedure
+		.input(logCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const log = await ctx.db.log.create({
+				data: {
+					event: input.event,
+					description: input.description,
+					user_id: input.user_id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menambahkan data Log", log, null);
+		}),
+
+	updateLog: publicProcedure
+		.input(logUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const log = await ctx.db.log.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					event: input.event,
+					description: input.description,
+					user_id: input.user_id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil mengubah data Log", log, null);
+		}),
+
+	deleteLog: publicProcedure
+		.input(logDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const log = await ctx.db.log.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menghapus data Log", log, null);
 		}),
 });

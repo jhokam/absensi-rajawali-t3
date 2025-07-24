@@ -1,6 +1,11 @@
 import type { DesaWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { desaFilter } from "@/types/desa";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	desaCreateSchema,
+	desaDeleteSchema,
+	desaFilter,
+	desaUpdateSchema,
+} from "@/types/desa";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const desaRouter = createTRPCRouter({
@@ -26,8 +31,8 @@ export const desaRouter = createTRPCRouter({
 	getAllPaginated: publicProcedure
 		.input(desaFilter)
 		.query(async ({ ctx, input }) => {
-			const limit = input.limit ?? 9;
-			const page = input.page ?? 0;
+			const limit = input.limit;
+			const page = input.page;
 			const where: DesaWhereInput = {
 				AND: [
 					{
@@ -56,5 +61,44 @@ export const desaRouter = createTRPCRouter({
 				{ items: data, meta: { total, page, limit, totalPages } },
 				null,
 			);
+		}),
+
+	createDesa: publicProcedure
+		.input(desaCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const desa = await ctx.db.desa.create({
+				data: {
+					nama: input.nama,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menambahkan data Desa", desa, null);
+		}),
+
+	updateDesa: publicProcedure
+		.input(desaUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const desa = await ctx.db.desa.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					nama: input.nama,
+				},
+			});
+
+			return formatResponse(true, "Berhasil mengubah data Desa", desa, null);
+		}),
+
+	deleteDesa: publicProcedure
+		.input(desaDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const desa = await ctx.db.desa.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menghapus data Desa", desa, null);
 		}),
 });

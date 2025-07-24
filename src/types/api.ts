@@ -1,3 +1,6 @@
+import { type } from "arktype";
+import z from "zod";
+
 export type ErrorResponse = {
 	name: string;
 	message: string;
@@ -30,3 +33,9 @@ export type Pagination = {
 	limit: number | undefined;
 	totalPages: number | undefined;
 };
+
+export const filterBase = z.object({
+	q: z.string().optional().default(""),
+	page: z.number().optional().default(0),
+	limit: z.number().optional().default(9),
+});

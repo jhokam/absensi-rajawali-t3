@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	createColumnHelper,
 	flexRender,
@@ -40,58 +40,57 @@ export default function GenerusPage() {
 	const [sheetFilter, setSheetFilter] = useState(false);
 	const [deleteId, setDeleteId] = useState("");
 	const queryClient = useQueryClient();
-	const [jenisKelaminParam, setJenisKelaminParam] = useQueryState(
-		"jenis_kelamin",
-		{
-			defaultValue: "",
-		},
-	);
-	const [jenjangParam, setJenjangParam] = useQueryState("jenjang", {
-		defaultValue: "",
-	});
-	const [pendidikanTerakhirParam, setPendidikanTerakhirParam] = useQueryState(
-		"pendidikan_terakhir",
-		{
-			defaultValue: "",
-		},
-	);
-	const [sambungParam, setSambungParam] = useQueryState("sambung", {
-		defaultValue: "",
-	});
-	const [keteranganParam, setKeteranganParam] = useQueryState("keterangan", {
-		defaultValue: "",
-	});
+	// const [jenisKelaminParam, setJenisKelaminParam] = useQueryState(
+	// 	"jenis_kelamin",
+	// 	{
+	// 		defaultValue: "",
+	// 	},
+	// );
+	// const [jenjangParam, setJenjangParam] = useQueryState("jenjang", {
+	// 	defaultValue: "",
+	// });
+	// const [pendidikanTerakhirParam, setPendidikanTerakhirParam] = useQueryState(
+	// 	"pendidikan_terakhir",
+	// 	{
+	// 		defaultValue: "",
+	// 	},
+	// );
+	// const [sambungParam, setSambungParam] = useQueryState("sambung", {
+	// 	defaultValue: "",
+	// });
+	// const [keteranganParam, setKeteranganParam] = useQueryState("keterangan", {
+	// 	defaultValue: "",
+	// });
 	const { data, isPending } = api.generus.getAllPaginated.useQuery({
 		q: searchQuery,
 		limit: pagination.pageSize,
 		page: pagination.pageIndex,
-		jenis_kelamin: jenisKelaminParam,
-		jenjang: jenjangParam,
-		pendidikan_terakhir: pendidikanTerakhirParam,
-		sambung: sambungParam,
-		keterangan: keteranganParam,
+		// jenis_kelamin: jenisKelaminParam,
+		// jenjang: jenjangParam,
+		// pendidikan_terakhir: pendidikanTerakhirParam,
+		// sambung: sambungParam,
+		// keterangan: keteranganParam,
 	});
 	const { setAlert } = useAlert();
 
-	const mutation = useMutation({
-		mutationFn: (id: string) => {},
+	const mutation = api.generus.deleteGenerus.useMutation({
 		onError: (error) => {
-			setAlert(
-				error.response?.data.error.message || "Internal Server Error",
-				"error",
-			);
+			setAlert(error.message || "Internal Server Error", "error");
 		},
 	});
 
 	const columnHelper = createColumnHelper<Generus>();
 
 	const handleDeleteConfirm = () => {
-		mutation.mutate(deleteId, {
-			onSuccess: (data) => {
-				queryClient.invalidateQueries({ queryKey: ["generusData"] });
-				setAlert(data.data.message, "success");
+		mutation.mutate(
+			{ id: deleteId },
+			{
+				onSuccess: (data) => {
+					queryClient.invalidateQueries({ queryKey: ["generusData"] });
+					setAlert(data.message, "success");
+				},
 			},
-		});
+		);
 		setDialog(false);
 		setDeleteId("");
 	};
@@ -100,16 +99,6 @@ export default function GenerusPage() {
 		setDeleteId(row.id);
 		setDialog(true);
 	};
-
-	// const { data, isPending, isError, error } = useGenerus(
-	// 	debouncedSearch,
-	// 	jenisKelaminParam,
-	// 	jenjangParam,
-	// 	pendidikanTerakhirParam,
-	// 	sambungParam,
-	// 	keteranganParam,
-	// 	pagination,
-	// );
 
 	const columns = [
 		columnHelper.accessor("id", { header: "ID" }),
@@ -197,12 +186,12 @@ export default function GenerusPage() {
 					description="This action cannot be undone."
 				/>
 			)}
-			{sheetFilter && (
+			{/* {sheetFilter && (
 				<SheetFilter
 					closeSheet={() => setSheetFilter(false)}
 					submitFilter={() => setSheetFilter(false)}
-				>
-					<Select
+				> */}
+			{/* <Select
 						name="jenis_kelamin"
 						label="Jenis Kelamin"
 						options={jenisKelaminOptions}
@@ -241,9 +230,9 @@ export default function GenerusPage() {
 						placeholder="Pilih Keterangan"
 						value={keteranganParam}
 						onChange={(e) => setKeteranganParam(e.target.value)}
-					/>
-				</SheetFilter>
-			)}
+					/> */}
+			{/* </SheetFilter>
+			)} */}
 			<div className="flex justify-between">
 				<SearchBar
 					placeholder="Search by Name"

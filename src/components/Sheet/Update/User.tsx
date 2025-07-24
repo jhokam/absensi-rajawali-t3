@@ -1,15 +1,12 @@
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import TextError from "@/components/TextError";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { roleOptions } from "@/constants";
-import {
-	type UserBase,
-	type UserRequest,
-	type UserResponse,
-	userSchema,
-} from "@/types/user";
+import type { User } from "@/generated/client/client";
+import { api } from "@/trpc/react";
+import { userUpdateSchema } from "@/types/user";
 import { useAlert } from "@/utils/useAlert";
 
 export default function SheetUpdateUser({
@@ -17,13 +14,12 @@ export default function SheetUpdateUser({
 	selectedData,
 }: {
 	closeSheet: () => void;
-	selectedData: UserBase;
+	selectedData: User;
 }) {
 	const { setAlert } = useAlert();
 	const queryClient = useQueryClient();
 
-	const { mutate } = useMutation({
-		mutationFn: async (data: UserRequest) => {},
+	const { mutate } = api.user.updateUser.useMutation({
 		onError: (error) => {
 			setAlert(error.message, "error");
 		},
@@ -31,6 +27,7 @@ export default function SheetUpdateUser({
 
 	const form = useForm({
 		defaultValues: {
+			id: selectedData.id,
 			username: selectedData.username,
 			password: "",
 			role: selectedData.role,
@@ -39,14 +36,14 @@ export default function SheetUpdateUser({
 			mutate(value, {
 				onSuccess: (data) => {
 					queryClient.invalidateQueries({ queryKey: ["userData"] });
-					setAlert(data.data.message, "success");
+					setAlert(data.message, "success");
 					closeSheet();
 				},
 			});
 			closeSheet();
 		},
 		validators: {
-			onSubmit: userSchema,
+			onSubmit: userUpdateSchema,
 		},
 	});
 

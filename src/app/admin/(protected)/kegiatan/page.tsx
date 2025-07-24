@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	createColumnHelper,
 	flexRender,
@@ -40,8 +40,7 @@ export default function KegiatanPage() {
 	const queryClient = useQueryClient();
 	const { setAlert } = useAlert();
 
-	const mutation = useMutation({
-		mutationFn: (id: string) => {},
+	const mutation = api.event.deleteEvent.useMutation({
 		onError: (error) => {
 			setAlert(error.message || "Internal Server Error", "error");
 		},
@@ -55,12 +54,15 @@ export default function KegiatanPage() {
 	};
 
 	const handleDeleteConfirm = () => {
-		mutation.mutate(deleteId, {
-			onSuccess: (data) => {
-				queryClient.invalidateQueries({ queryKey: ["eventData"] });
-				setAlert("Data berhasil dihapus", "success");
+		mutation.mutate(
+			{ id: deleteId },
+			{
+				onSuccess: (data) => {
+					queryClient.invalidateQueries({ queryKey: ["eventData"] });
+					setAlert("Data berhasil dihapus", "success");
+				},
 			},
-		});
+		);
 		setDialog(false);
 		setDeleteId("");
 	};

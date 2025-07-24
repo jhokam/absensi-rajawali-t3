@@ -1,6 +1,11 @@
 import type { EventWhereInput } from "@/generated/client/models";
-import { formatResponseArray } from "@/helper/response.helper";
-import { eventFilter } from "@/types/event";
+import { formatResponse, formatResponseArray } from "@/helper/response.helper";
+import {
+	eventCreateSchema,
+	eventDeleteSchema,
+	eventFilter,
+	eventUpdateSchema,
+} from "@/types/event";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const eventRouter = createTRPCRouter({
@@ -56,5 +61,59 @@ export const eventRouter = createTRPCRouter({
 				{ items: data, meta: { total, page, limit, totalPages } },
 				null,
 			);
+		}),
+
+	createEvent: publicProcedure
+		.input(eventCreateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const event = await ctx.db.event.create({
+				data: {
+					title: input.title,
+					description: input.description,
+					start_date: input.start_date,
+					end_date: input.end_date,
+					latitude: input.latitude,
+					longitude: input.longitude,
+				},
+			});
+
+			return formatResponse(
+				true,
+				"Berhasil menambahkan data Event",
+				event,
+				null,
+			);
+		}),
+
+	updateEvent: publicProcedure
+		.input(eventUpdateSchema)
+		.mutation(async ({ ctx, input }) => {
+			const event = await ctx.db.event.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					title: input.title,
+					description: input.description,
+					start_date: input.start_date,
+					end_date: input.end_date,
+					latitude: input.latitude,
+					longitude: input.longitude,
+				},
+			});
+
+			return formatResponse(true, "Berhasil mengubah data Event", event, null);
+		}),
+
+	deleteEvent: publicProcedure
+		.input(eventDeleteSchema)
+		.mutation(async ({ ctx, input }) => {
+			const event = await ctx.db.event.delete({
+				where: {
+					id: input.id,
+				},
+			});
+
+			return formatResponse(true, "Berhasil menghapus data Event", event, null);
 		}),
 });
